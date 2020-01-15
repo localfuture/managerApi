@@ -85,7 +85,6 @@ const expenseSchema = mongoose.Schema({
 //Expense Collection
 var expenseCollection = mongoose.model('expenseCollections', expenseSchema);
 
-
 app.post('/addExpense', (req, res) => {
 
     var today = new Date();
@@ -160,6 +159,22 @@ app.get('/fetchExpense', (req, res) => {
             console.log(error);
             res.status(500).json('error fetching data');
         });
+});
+
+//this month
+app.get('/thismonth', (req,res) => {
+    
+    var today = new Date();
+
+    expenseCollection.find({month: today.getMonth(), year: today.getFullYear()})
+    .then(data => {
+        console.log("data fetched: ", data);
+        res.status(200).send(data);
+    })
+    .catch(error => {
+        console.log(error);
+        res.status(500).json('error fetching data');
+    });
 });
 
 app.delete('/deleteExpense/:id', (req, res) => {
